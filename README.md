@@ -1,7 +1,7 @@
 # Paradigms on the frontend
 
-> This article is meant for a wide audience  
-> If you're a frontend developer you should know most of the content here. Skip ahead to the sections you're curious in
+> This article is meant for a wide audience.
+> If you're a frontend developer you should know most of the content here, skip ahead to the sections you're curious in.
 
 It has been a number of years since the boom of frameworks like React, Vue, Angular, ...etc.  
 In the last couple of years, you may have also seen new frameworks like Qwik & Astro rising in popularity.
@@ -20,17 +20,13 @@ Before we get into the thick of it, let's review some metrics one might use.
 The Performance audit has the most relevance so we'll keep it simple and look into that.  
 These are the 5 metrics of Performance audit in Lighthouse 10:
 
-- **First Contentful Paint (FCP)\***
-  - Measures the time from page load to any content rendering
-  - Users should see anything as soon as possible to reassure something is happening
-- **Total Blocking Time (TBT)\***
-  - Measures the time between FCP and time to interactivity
-- **Speed Index (SI)**
-  - Measures how quickly the contents are populated
-- **Largest Contentful Paint (LCP)**
-  - Measures the render time of the largest text block or image visible within the viewport, relative to when the page first started loading
-- **Cumulative Layout Shift (CLS)**
-  - Measures unexpected layout shifts in the page
+| Metric                           | Description                                                                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **First Contentful Paint (FCP)** | Measures the time from page load to any content rendering. Users should see anything as soon as possible to reassure something is happening |
+| **Total Blocking Time (TBT)**    | Measures the time between FCP and time to interactivity                                                                                     |
+| Speed Index (SI)                 | Measures how quickly the contents are populated                                                                                             |
+| Largest Contentful Paint (LCP)   | Measures the render time of the largest text block or image visible within the viewport, relative to when the page first started loading    |
+| Cumulative Layout Shift (CLS)    | Measures unexpected layout shifts in the page                                                                                               |
 
 While this article isn't focused on the numbers and all technical details, I think it helps to have a picture of the metrics that our industry use.
 I did not use Lighthouse to measure my demos in this repo because the demos are all slightly different; it wouldn't be fair.
@@ -79,7 +75,7 @@ pnpm i
 pnpm dev
 ```
 
-## Static sites
+## 1. Static sites
 
 ### Use case
 
@@ -104,15 +100,13 @@ sequenceDiagram
     Browser->>WebServer: GET example.com
     WebServer->>Browser: HTML document
     Browser->>WebServer: GET static assets
+    Note over Browser: wait for all render-blocking assets
     par WebServer to Browser
       WebServer->>Browser: scripts
       WebServer->>Browser: css
       WebServer->>Browser: fonts, ...etc
     end
-    Note over Browser: wait for all render-blocking assets
-    rect rgb(0, 0, 0)
     Note over Browser: First render!
-    end
 ```
 
 After the browser retrieves the document, it parses through it for any assets it needs to fetch, then fetch it. This sequencial call is inevitable, and there are [certain assets](https://developer.chrome.com/docs/lighthouse/performance/render-blocking-resources) that are render-blocking. When all of these assets are retrieved, the browser will then paint the content on the screen.[^1]
@@ -150,49 +144,59 @@ On the side of complexity, it can be difficult to manage a static site that grow
   - Cache your assets
   - Have your content available offline
 
-## Static site generation
+## 2. Static site generation (SSG)
 
-Static site generators should need no introduction, this domain is extremely saturated. They process some files in a given syntax and create a static site. Some languages other than Javascript may also have a framework, some popular ones are:
+Static site generators should need no introduction, this domain is extremely saturated. In short, they process some files in a given syntax (e.g. markdown) and create a static site. Some languages other than Javascript may also have a framework, some popular ones are:
 
-- NextJs (React)
-- Nuxt (Vue)
 - Gatsby (React)
 - Astro (React/Vue/Svelte/Lit ...etc)
 - Docusaurus (React)
 - Hugo (Go)
 - Jekyll (Ruby)
+- NextJs\* (React)
+- Nuxt\* (Vue)
+
+\* While NextJs and Nuxt are included here, they're not purely made for SSG.
 
 ### Use case
 
-You should almost always use an existing framework instead of engineering your own. With each framework competing with each other in performance or developer experience, it
+In general, the use case stays the same as before: your content has little interactivity and mostly static. Most frameworks are built for this use case. However, some of them tries to go a step further and can either provide flexibility in interactivity or ability to provide dynamic content.
+
+To give some example:
+
+- Docusaurus excels in writing documentations and helps you: maintain versions, support multiple languages, search content
+- Astro excels in allowing developers writing interactivity while keeping the site performant. More on how this works in the [Partial Hydration](#partial-hydration--islands) section
+- [NextJs](https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration#self-hosting-isr) and [Gatsby](https://www.gatsbyjs.com/docs/how-to/rendering-options/using-deferred-static-generation/) has support for "incrementally generating static content". More on this in the demo
 
 ### Demo
 
-https://www.gatsbyjs.com/docs/how-to/rendering-options/using-deferred-static-generation/
+Visit http://localhost:3002/content/1 for the demo.
 
-https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration#self-hosting-isr
+Writing your docs/content and having it compile into a static site is probably what most of us have done before.
+This demo features dynamic content by using a feature in NextJs to fire an API during build time to create all the pages available _at the time_.
+If you read the [source code](./demos/2static-generator/src/pages/content/[id].tsx), you'll find that this is the only file we wrote.
 
-## Dynamic content
+If you run were to run `pnpm turbo run build --filter=2static-generator`, you will find all possible pages pre-rendered in `demos\2static-generator\.next\server\pages\content`.
 
-[^1]: https://developer.mozilla.org/en-US/docs/Web/Performance/Critical_rendering_path
-[^2]: https://www.cloudflare.com/en-gb/learning/cdn/what-is-a-cdn/
+## Client side rendering (SPA)
 
-### Client side rendering (SPA)
+As the web continued growing in popularity, the industry realized that browsers have the highest interoperability.
+It can be served on all devices and operating systems, so creating a web application will serve all potential platforms.
+jQuery
 
-<!--
- -->
+### Use case
 
-### Server side rendering
-
-<!--
- -->
-
-### Server side rendering w/ streams
+## Server side rendering
 
 <!--
  -->
 
-### Partial hydration & Islands
+## Server side rendering w/ streams
+
+<!--
+ -->
+
+## Partial hydration & Islands
 
 Thus far, we've been shipping javascript for everything (on the page?).
 
@@ -243,3 +247,6 @@ Demo idea
 1. Server side rendering w/ streams -- content can be streamed in (header and footer should render even while the content is fetching)
 1. Partial hydration & Islands -- header and footer doesn't need to have their javascript sent to the client
 1. Phoenix LiveView
+
+[^1]: https://developer.mozilla.org/en-US/docs/Web/Performance/Critical_rendering_path
+[^2]: https://www.cloudflare.com/en-gb/learning/cdn/what-is-a-cdn/
