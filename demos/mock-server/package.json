@@ -1,0 +1,12 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "scripts": {
+    "server:build": "esbuild index.ts --bundle --outfile=build/server.js --platform=node",
+    "start": "pnpm server:build && node build/server.js",
+    "dev": "nodemon --ignore build/ -e ts,tsx --exec pnpm start"
+  },
+  "dependencies": {
+    "cors": "2.8.5"
+  }
+}

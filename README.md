@@ -106,7 +106,7 @@ sequenceDiagram
       WebServer->>Browser: css
       WebServer->>Browser: fonts, ...etc
     end
-    Note over Browser: First render!
+    Note over Browser: First Contentful Paint
 ```
 
 After the browser retrieves the document, it parses through it for any assets it needs to fetch, then fetch it. This sequencial call is inevitable, and there are [certain assets](https://developer.chrome.com/docs/lighthouse/performance/render-blocking-resources) that are render-blocking. When all of these assets are retrieved, the browser will then paint the content on the screen.[^1]
@@ -185,6 +185,32 @@ It can be served on all devices and operating systems, so creating a web applica
 jQuery
 
 ### Use case
+
+### What is happening?
+
+For the page to be considered ready, the user has to wait for:
+
+- The static files to be fetched from a web server (Nginx in this example)
+- On receiving the static files, the javascript needs to render the page
+- The rendered content does an API call to fetch the resource
+- The resource is rendered
+
+```mermaid
+sequenceDiagram
+    actor Browser
+    Browser->>+WebServer: GET example.com
+    WebServer->>-Browser: HTML document
+    Browser->>WebServer: GET static assets
+    par WebServer to Browser
+      WebServer->>Browser: scripts
+      Note over Browser: Wait for javascript to render
+      WebServer->>Browser: css
+      WebServer->>Browser: fonts, ...etc
+    end
+    Note over Browser: First Contentful Paint
+    Browser->>+Service: GET resource
+    Service->>-Browser: resource
+```
 
 ## Server side rendering
 

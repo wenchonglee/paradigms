@@ -1,5 +1,20 @@
+@font-face {
+  font-family: "Atkinson";
+  src: url("/fonts/atkinson-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("/fonts/atkinson-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
-  font-family: "Segoe UI";
+  font-family: "Atkinson";
   color: rgb(247, 247, 247);
   background-color: #1b1b1f;
 }
@@ -25,6 +40,30 @@ body {
   background-color: #202127;
   padding: 1rem;
   border-radius: 0.5rem;
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translate(4px);
+}
+
+.card-name {
+  font-weight: 600;
+}
+
+.card-email {
+  color: hsl(240 5% 64.9%);
+}
+
+.card img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: contain;
+  background-color: white;
+  padding: 4px;
 }
 
 .footer {
