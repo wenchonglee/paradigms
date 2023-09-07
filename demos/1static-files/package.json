@@ -1,0 +1,11 @@
+{
+  "name": "1static-files",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node serve.mjs"
+  },
+  "dependencies": {
+    "express": "4.18.2",
+    "serve-handler": "6.1.5"
+  }
+}

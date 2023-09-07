@@ -1,0 +1,33 @@
+html {
+  font-family: "Segoe UI";
+  color: rgb(247, 247, 247);
+  background-color: #1b1b1f;
+}
+
+body {
+  width: 600px;
+  margin: 0 auto;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  background-color: #202127;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.footer {
+  margin-block: 4rem;
+  opacity: 0.5;
+}
