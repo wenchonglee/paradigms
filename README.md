@@ -137,20 +137,18 @@ Static site generators should need no introduction, this domain is extremely sat
 - Docusaurus (React)
 - Hugo (Go)
 - Jekyll (Ruby)
-- NextJs\* (React)
-- Nuxt\* (Vue)
-
-\* While NextJs and Nuxt are included here, they're not purely made for SSG.
+- NextJs (React)
+- Nuxt (Vue)
 
 ### Use case
 
-In general, the use case stays the same as before: your content has little interactivity and mostly static. Most frameworks are built for this use case. However, some of them tries to go a step further and can either provide flexibility in interactivity or ability to provide dynamic content.
+> Note that most of these have something that sets them apart.  
+> For example, NextJs and Nuxt are included here but they're more of a swiss army knife.
+> Docusaurus excels in writing documentations and helps you: maintain versions, support multiple languages, search content.
+> Astro excels in allowing developers writing interactivity while keeping the site performant. More on how this works in the [Partial Hydration](#partial-hydration--islands) section
+> **The intent here is not to cover all the quirks and features of these frameworks, so we'll only discuss their base feature: SSG.**
 
-To give some example:
-
-- Docusaurus excels in writing documentations and helps you: maintain versions, support multiple languages, search content
-- Astro excels in allowing developers writing interactivity while keeping the site performant. More on how this works in the [Partial Hydration](#partial-hydration--islands) section
-- [NextJs](https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration#self-hosting-isr) and [Gatsby](https://www.gatsbyjs.com/docs/how-to/rendering-options/using-deferred-static-generation/) has support for "incrementally generating static content". More on this in the demo
+For SSG, the general use case is when your content has little interactivity and is mostly static.
 
 ### Demo
 
@@ -160,13 +158,21 @@ Writing your docs/content and having it compile into a static site is probably w
 This demo features dynamic content by using a feature in NextJs to fire an API during build time to create all the pages available _at the time_.
 If you read the [source code](./demos/2static-generator/src/pages/content/[id].tsx), you'll find that this is the only file we wrote.
 
-If you run were to run `pnpm turbo run build --filter=2static-generator`, you will find all possible pages pre-rendered in `demos\2static-generator\.next\server\pages\content`.
+If you were to run `pnpm turbo run build --filter=2static-generator`, you will find all possible pages pre-rendered in `demos\2static-generator\.next\server\pages\content`.
+
+> Some frameworks like [NextJs](https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration#self-hosting-isr) and [Gatsby](https://www.gatsbyjs.com/docs/how-to/rendering-options/using-deferred-static-generation/) also has support for "incrementally generating static content"  
+> The difference being static pages are created on request and cached. This can be useful for news websites where there are a lot of static content and not much need for interactivity.
 
 ## Client side rendering (SPA)
 
 As the web continued growing in popularity, the industry realized that browsers have the highest interoperability.
 It can be served on all devices and operating systems, so creating a web application will serve all potential platforms.
-jQuery
+
+This was the first big paradigm shift into web apps and jQuery paved the way in interactivity for a long time.
+I don't have the experience to share how it was when jQuery was popular, so we'll move along to the time when React/Vue/Angular took over.
+The biggest challenge back then for writing web apps is Reactivity. We want the UI to reflect the state of our variables, but there is a lot of boiler-plate code to make this happen.
+
+React and Vue took the Virtual DOM (VDOM) approach. This is a relatively low level detail to understand, but it will be necessary to help you understand how Hydration works in the next section.
 
 ### Use case
 
