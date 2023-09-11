@@ -34,26 +34,11 @@ I did not use Lighthouse to measure my demos in this repo because the demos are 
 TL;DR We want our users to have a responsive experience, as soon as possible.
 FCP and TBT will be the core metrics for this article.
 
-### Implementation complexity
+### Interactivity
 
-There isn't a good way to measure this, but this is not a trivial issue to brush aside.
-We want our solution to fit our use cases and not over-engineer it.
-At the same time,
-As we go through each paradigm, you should be able to have a sense of how complex each of them can get.
+What is the cost in complexity for interactivity?
 
-#### Interactivity & state
-
-If we need it, how easy is it for us to introduce "app-like" interactivity?
-
-For example, we might want smooth transitions
-
-#### Out-of-scope topics
-
-Some topics that we will need to think about:
-
-- Routing
-- Pushing to edge/cdn
-- Fault tolerance
+For example, we might want native app-like experiences where users can interact with graphs, go through a form wizard, have smooth transitions between pages, ...etc.
 
 ## Approaches
 
@@ -100,13 +85,12 @@ sequenceDiagram
     Browser->>WebServer: GET example.com
     WebServer->>Browser: HTML document
     Browser->>WebServer: GET static assets
-    Note over Browser: wait for all render-blocking assets
+    Note over Browser: First Contentful Paint after all render-blocking assets
     par WebServer to Browser
       WebServer->>Browser: scripts
       WebServer->>Browser: css
       WebServer->>Browser: fonts, ...etc
     end
-    Note over Browser: First Contentful Paint
 ```
 
 After the browser retrieves the document, it parses through it for any assets it needs to fetch, then fetch it. This sequencial call is inevitable, and there are [certain assets](https://developer.chrome.com/docs/lighthouse/performance/render-blocking-resources) that are render-blocking. When all of these assets are retrieved, the browser will then paint the content on the screen.[^1]
@@ -203,21 +187,60 @@ sequenceDiagram
     Browser->>WebServer: GET static assets
     par WebServer to Browser
       WebServer->>Browser: scripts
-      Note over Browser: Wait for javascript to render
       WebServer->>Browser: css
       WebServer->>Browser: fonts, ...etc
     end
-    Note over Browser: First Contentful Paint
+    Note over Browser: First Contentful Paint after <br /> - all render blocking assets fetched <br /> - javascript has rendered
     Browser->>+Service: GET resource
     Service->>-Browser: resource
 ```
 
 ## Server side rendering
 
+```mermaid
+sequenceDiagram
+    actor Browser
+    Browser->>+WebServer: GET example.com
+    WebServer->>+Service: GET resource
+    Service->>-WebServer: resource
+    WebServer->>WebServer: Render HTML on server
+    WebServer->>-Browser: Server rendered document
+    Browser->>WebServer: GET static assets
+    Note over Browser: First Contentful Paint after all render-blocking assets
+    par WebServer to Browser
+      WebServer->>Browser: scripts
+      Note over Browser: Interactive after hydration
+      WebServer->>Browser: css
+      WebServer->>Browser: fonts, ...etc
+    end
+```
+
 <!--
  -->
 
 ## Server side rendering w/ streams
+
+```mermaid
+sequenceDiagram
+    actor Browser
+    Browser->>+WebServer: GET example.com
+    par Browser to Service
+      WebServer->>+Service: GET resource
+      WebServer->>WebServer: Render HTML on server
+      WebServer->>Browser: Server rendered document <br/>without resource
+    end
+    Browser->>WebServer: GET static assets
+    Note over Browser: First Contentful Paint after all render-blocking assets
+    par WebServer to Browser
+      WebServer->>Browser: scripts
+      Note over Browser: Interactive after hydration
+      WebServer->>Browser: css
+      WebServer->>Browser: fonts, ...etc
+    end
+    Note over WebServer,Service: When ready
+    Service->>-WebServer: resource
+    WebServer->>-Browser: Stream resource
+```
 
 <!--
  -->
@@ -248,31 +271,6 @@ our SPA can:
 
 https://www.youtube.com/watch?v=CyTHEh2yyr8&t=2s
 https://github.com/bholmesdev/eleventy-vite-jam-sandwich
-
-Demo idea
-
-<h1> header </h1>
-
-<ul>
-  <li>content</li>
-  <li>from</li>
-  <li>an</li>
-  <li>api</li>
-</ul>
-
-<div> footer </div>
-
-1. Static sites -- content can be written in files directly
-1. Static site generation -- content can be written in files directly, but easier with generators (e.g. fetched at build time)
-1. Incremental static site generation -- content can be fetched at run time incrementally
-
---
-
-1. Client side rendering (SPA) -- content can be fetched in a waterfall
-1. Server side rendering -- content can be fetched server side (the page may not load until the server has completed its fetch\*??)
-1. Server side rendering w/ streams -- content can be streamed in (header and footer should render even while the content is fetching)
-1. Partial hydration & Islands -- header and footer doesn't need to have their javascript sent to the client
-1. Phoenix LiveView
 
 [^1]: https://developer.mozilla.org/en-US/docs/Web/Performance/Critical_rendering_path
 [^2]: https://www.cloudflare.com/en-gb/learning/cdn/what-is-a-cdn/
