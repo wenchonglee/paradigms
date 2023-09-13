@@ -1,0 +1,10 @@
+{
+  "name": "5server-stream",
+  "version": "1.0.0",
+  "scripts": {
+    "server:build": "esbuild server.tsx --bundle --loader:.js=jsx --outfile=static/build/server.js --platform=node --define:process.env.NODE_ENV='development'",
+    "client:build": "esbuild static.tsx --bundle --loader:.js=jsx --outfile=static/build/static.js --platform=node --minify --define:process.env.NODE_ENV='development'",
+    "start": "pnpm server:build && pnpm client:build && node static/build/server.js",
+    "dev": "nodemon --ignore static/build/ -e ts,tsx --exec pnpm start"
+  }
+}

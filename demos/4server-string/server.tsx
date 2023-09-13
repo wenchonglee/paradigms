@@ -5,13 +5,6 @@ import { App } from "./app";
 
 const app = express();
 
-/**
- * A simple API just to demonstrate how an API can be written in express
- */
-app.get("/hello", async (_req, res) => {
-  res.status(200).send("world");
-});
-
 app.get("/", async (_req, res) => {
   /**
    * Fetch the data on the server before rendering it
