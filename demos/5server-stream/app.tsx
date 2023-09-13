@@ -1,37 +1,23 @@
-import * as React from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useData } from "./provider";
 
 export function App() {
-  const [clientMessage, setClientMessage] = React.useState("");
-
-  React.useEffect(() => {
-    setClientMessage("Hello From React");
-  });
-
   return (
-    <html>
-      <head>
-        <link rel="stylesheet" href="styles.css" />
-        <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" />
-        <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" />
-        <title>5server-stream</title>
-      </head>
+    <>
+      <h1>Team list</h1>
+      <Suspense fallback={<div>loading...</div>}>
+        <Posts />
+      </Suspense>
 
-      <body>
-        <h1>Team list</h1>
-        <mark>{clientMessage}</mark>
-
-        <React.Suspense fallback={<div>loading...</div>}>
-          <Posts />
-        </React.Suspense>
-
-        <div className="footer">Footer</div>
-      </body>
-    </html>
+      <div className="footer">Footer</div>
+    </>
   );
 }
 
 const Posts = () => {
-  const data = suspensed(fetchData());
+  const data = useData();
+  // const data = suspensed(fetchData());
+  // if (!data) return null;
 
   return (
     <div className="card-list">
@@ -85,7 +71,6 @@ async function getData() {
   const response = await fetch("http://localhost:5000");
   const data = await response.json();
   await sleep();
-  console.log(data);
   return data;
 }
 
