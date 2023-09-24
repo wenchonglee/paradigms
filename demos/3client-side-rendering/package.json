@@ -1,5 +1,5 @@
 {
-  "name": "server-string",
+  "name": "3client-side-rendering",
   "version": "1.0.0",
   "scripts": {
     "build": "esbuild index.tsx --bundle --outfile=static/build/static.js --minify",

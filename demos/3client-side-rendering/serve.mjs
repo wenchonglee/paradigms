@@ -10,6 +10,8 @@ app.use(async (req, res) => {
     res,
     {
       public: "static",
+      // route all paths to index.html, required for SPA behavior
+      // rewrites: [{ source: "!**/*.js", destination: "/index.html" }],
     },
     {
       // middleware that sets an arbitrary delay for all files

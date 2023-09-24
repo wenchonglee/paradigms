@@ -1,15 +1,22 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { sleep } from "./sleep";
-import { Content } from "./content";
+import { User, Users } from "./users";
+import { Link, Route } from "wouter";
 
 const App = () => {
-  sleep(2);
+  // sleep(2);
   return (
-    <div>
-      Hello world
-      <Content />
-    </div>
+    <>
+      <Route path="/">
+        <Users />
+      </Route>
+
+      <Route path="/users/:userId">
+        <User />
+      </Route>
+      <div className="footer">Footer</div>
+    </>
   );
 };
 
