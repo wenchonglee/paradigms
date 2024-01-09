@@ -9,6 +9,7 @@ app.get("/", async (_req, res) => {
   /**
    * Fetch the data on the server before rendering it
    */
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   const response = await fetch("http://localhost:5000");
   const data = await response.json();
 
