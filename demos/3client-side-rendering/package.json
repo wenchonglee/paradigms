@@ -2,7 +2,7 @@
   "name": "3client-side-rendering",
   "version": "1.0.0",
   "scripts": {
-    "build": "esbuild index.tsx --bundle --outfile=static/build/static.js --minify",
+    "build": "esbuild app.tsx --bundle --outfile=static/build/static.js --minify",
     "start": "pnpm build && node serve.mjs",
     "dev": "nodemon --ignore build/ -e ts,tsx,html,mjs --exec pnpm start"
   }

@@ -39,3 +39,4 @@ gatsby-types.d.ts
 .cache
 *.tsbuildinfo
 next-env.d.ts
+dist
